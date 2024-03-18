@@ -23,11 +23,12 @@ def verify_webhook():
 
 # Function to handle incoming webhook data
 def process_webhook():
-    data = json.loads(frappe.request.data)
-    for entry in data.get("entry", []):
-        for change in entry.get("changes", []):
-            if change.get("field") == "comments":
-                handle_comment(change.get("value"))
+    data = frappe.local.form_dict
+    frappe.get_doc({
+        "doctype": "Facebook Notification Log",
+        "template": "Webhook",
+        "meta_data": json.dumps(data)
+    }).insert(ignore_permissions=True)
 
 # Function to handle incoming comment data
 def handle_comment(comment_data):
