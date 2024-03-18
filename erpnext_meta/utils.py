@@ -15,8 +15,8 @@ url = f"https://graph.facebook.com/v19.0/{page_id}/subscribed_apps"
 @frappe.whitelist(allow_guest=True)
 def verify_webhook():
     verify = frappe.db.get_single_value("Facebook Page Settings", "verify_token")
-    hub_challenge = frappe.form_dict.get("hub.challenge")
-    if frappe.request.form_dict.get("hub.verify_token") == verify:
+    hub_challenge = frappe.request.args.get("hub.challenge")
+    if frappe.request.args.get("hub.verify_token") == verify_token:
         return Response(hub_challenge, status=200)
     else:
         return "Invalid verify token"
