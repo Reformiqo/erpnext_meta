@@ -127,11 +127,16 @@ app_license = "MIT"
 # Scheduled Tasks
 # ---------------
 
-# scheduler_events = {
+scheduler_events = {
+    "cron": {
+        "* * * * *": [
+            "erpnext_meta.utils.fetch_comments"
+        ]
+    },
 # 	"all": [
-# 		"erpnext_meta.tasks.all"
-# 	],
-# 	"daily": [
+# 		"erpnext_meta.utils.fetch_comments"
+# 	]
+# # 	"daily": [
 # 		"erpnext_meta.tasks.daily"
 # 	],
 # 	"hourly": [
@@ -143,7 +148,7 @@ app_license = "MIT"
 # 	"monthly": [
 # 		"erpnext_meta.tasks.monthly"
 # 	],
-# }
+}
 
 # Testing
 # -------

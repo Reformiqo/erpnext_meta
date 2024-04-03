@@ -1,6 +1,7 @@
 import frappe
 import json
 from frappe.utils import get_site_name
+import requests
 from werkzeug.wrappers import Response
 
 # Fetch settings from Frappe
@@ -23,42 +24,92 @@ def verify_webhook():
 
 # Function to handle incoming webhook data
 def process_webhook():
-    data = frappe.local.form_dict
-    frappe.get_doc({
-        "doctype": "Facebook Notification Log",
-        "template": "Webhook",
-        "meta_data": json.dumps(data)
-    }).insert(ignore_permissions=True)
-
-# Function to handle incoming comment data
-def handle_comment(comment_data):
-    # Extract necessary data from comment_data
-    comment_id = comment_data.get("comment_id")
-    comment_message = comment_data.get("message")
-    sender_id = comment_data.get("sender_id")
-
-    # Create lead in ERPNext
-    create_lead_in_erpnext(comment_message, sender_id)
-
-# Function to create lead in ERPNext
-def create_lead_in_erpnext(comment_message, sender_id):
-    # Perform necessary actions to create a lead in ERPNext using the data provided
-    frappe.get_doc({
-        "doctype": "Lead",
-        "first_name": sender_id,
-        'status': 'Open',
-        "description": comment_message,
-        "company_name": "Facebook Lead",
-        # Add more fields as needed
-    }).insert(ignore_permissions=True)
+    try:
+        doc = frappe.get_doc({
+            "doctype": "Facebook Notification Log",
+            "template": "Webhook",
+            "metadata": frappe.local.form_dict
+        })
+        doc.save(ignore_permissions=True)
+        frappe.db.commit()
+    except Exception as e:
+        # Log the error or handle it appropriately
+        frappe.log_error(f"Error processing webhook: {e}")
 
 # Main function to handle incoming requests
 @frappe.whitelist(allow_guest=True)
-def webhook():
+def facebook_webhook():
     if frappe.request.method == "GET":
         return verify_webhook()
     elif frappe.request.method == "POST":
-        process_webhook()
+        new_notification = frappe.get_doc({
+            "doctype": "Facebook Notification Log",
+            "template": "Webhook",
+            "metadata": frappe.local.form_dict
+        })
+        new_notification.insert(ignore_permissions=True)
+        frappe.db.commit()
+        
         return "Webhook processed successfully"
     else:
         return "Method not allowed", 405
+
+#fetch comments of a page
+def fetch_facebook_comments():
+    settings = frappe.get_doc("Facebook Page Settings", "Facebook Page Settings")
+    access_token = settings.get_password("access_token")
+    page_id = settings.page_id
+    feed = f"https://graph.facebook.com/v19.0/{page_id}/feed?access_token={access_token}"
+    response = requests.request("GET", feed)
+    # Process the response and extract comments
+    if response.status_code == 200:
+        for post in response.json().get("data"):
+            post_url = f"https://graph.facebook.com/v19.0/{post.get('id')}/comments?access_token={access_token}"
+            comments = requests.request("GET", post_url)
+            for comment in comments.json().get("data"):
+                message = comment.get("message")
+                sender_id = comment.get("from")
+                comment_id = comment.get("id")
+                print(f'Inserting comment {comment_id}')
+                if not frappe.db.exists("Meta Comments", comment_id):
+                    new_comment = frappe.get_doc({
+                        'doctype': 'Meta Comments',
+                        'comment_id': comment_id,
+                        'message': message,
+                        'comment_source': 'Facebook',
+                    })
+                    new_comment.insert()
+                    frappe.db.commit()
+
+    
+@frappe.whitelist(allow_guest=True)
+def fetch_instagram_comments():
+    settings = frappe.get_doc("Facebook Page Settings", "Facebook Page Settings")
+    access_token = settings.get_password("access_token")
+    page_id = settings.page_id
+    instagram_media = f"https://graph.facebook.com/v19.0/17841464100616335?fields=media&access_token={access_token}"
+    response = requests.request("GET", instagram_media)
+    for media in response.json().get("media").get("data"):
+        media_id = media.get("id")
+        comments_url = f"https://graph.facebook.com/v19.0/{media_id}/comments?access_token={access_token}"
+        comments = requests.request("GET", comments_url)
+        for comment in comments.json().get("data"):
+            message = comment.get("text")
+            comment_id = comment.get("id")
+            print(f'Inserting comment {comment_id}')
+            if not frappe.db.exists("Meta Comments", comment_id):
+                new_comment = frappe.get_doc({
+                    'doctype': 'Meta Comments',
+                    'comment_id': comment_id,                    'message': message,
+                    'comment_source': 'Instagram',
+                })
+                new_comment.insert()
+                frappe.db.commit()
+    if response.status_code == 200:
+        return "Comments fetched successfully"
+    else:
+        return "Error fetching comments"
+    
+def fetch_comments():
+    fetch_facebook_comments()
+    fetch_instagram_comments()

@@ -1,0 +1,87 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:Reply-{####}",
+ "creation": "2024-03-26 03:46:40.619384",
+ "default_view": "List",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "comment",
+  "column_break_nwfdu",
+  "comment_id",
+  "section_break_dljhq",
+  "message",
+  "column_break_acbhs",
+  "reply_message"
+ ],
+ "fields": [
+  {
+   "fetch_from": "comment.comment_id",
+   "fieldname": "comment_id",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Comment Id",
+   "read_only": 1,
+   "reqd": 1
+  },
+  {
+   "fieldname": "section_break_dljhq",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "comment",
+   "fieldtype": "Link",
+   "label": "Comment",
+   "options": "Meta Comments"
+  },
+  {
+   "fieldname": "column_break_acbhs",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "reply_message",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Reply Message",
+   "reqd": 1,
+   "set_only_once": 1
+  },
+  {
+   "fieldname": "column_break_nwfdu",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fetch_from": "comment.message",
+   "fieldname": "message",
+   "fieldtype": "Small Text",
+   "label": "Comment Message"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-03-30 04:48:57.071870",
+ "modified_by": "Administrator",
+ "module": "Erpnext Meta",
+ "name": "Comment Reply",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}
