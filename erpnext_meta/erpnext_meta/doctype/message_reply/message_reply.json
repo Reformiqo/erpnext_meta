@@ -1,0 +1,86 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:MSG-Reply-{####}",
+ "creation": "2024-04-04 13:37:08.983015",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "message",
+  "message_id",
+  "message_source",
+  "section_break_bkpe",
+  "message_text",
+  "column_break_nedj",
+  "reply_message"
+ ],
+ "fields": [
+  {
+   "fetch_from": "message.message_source",
+   "fieldname": "message_source",
+   "fieldtype": "Data",
+   "label": "Message Source",
+   "set_only_once": 1
+  },
+  {
+   "fieldname": "section_break_bkpe",
+   "fieldtype": "Section Break"
+  },
+  {
+   "fieldname": "message",
+   "fieldtype": "Link",
+   "label": "Message",
+   "options": "Meta Messages",
+   "set_only_once": 1
+  },
+  {
+   "fieldname": "column_break_nedj",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "reply_message",
+   "fieldtype": "Small Text",
+   "label": "Reply Message",
+   "set_only_once": 1
+  },
+  {
+   "fetch_from": "message.message",
+   "fieldname": "message_text",
+   "fieldtype": "Small Text",
+   "label": "Message Text",
+   "set_only_once": 1
+  },
+  {
+   "fetch_from": "message.message_id",
+   "fieldname": "message_id",
+   "fieldtype": "Data",
+   "label": "Message ID"
+  }
+ ],
+ "hide_toolbar": 1,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2024-04-04 14:48:45.886605",
+ "modified_by": "Administrator",
+ "module": "Erpnext Meta",
+ "name": "Message Reply",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

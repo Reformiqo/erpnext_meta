@@ -9,12 +9,12 @@
  "engine": "InnoDB",
  "field_order": [
   "first_name",
-  "column_break_ayupv",
   "last_name",
+  "column_break_ayupv",
+  "message_id",
+  "message_source",
   "section_break_r9xv8",
-  "message",
-  "column_break_8gugh",
-  "message_source"
+  "message"
  ],
  "fields": [
   {
@@ -47,19 +47,20 @@
    "read_only": 1
   },
   {
-   "fieldname": "column_break_8gugh",
-   "fieldtype": "Column Break"
-  },
-  {
    "fieldname": "message_source",
    "fieldtype": "Select",
    "label": "Message Source",
    "options": "Facebook\nInstagram"
+  },
+  {
+   "fieldname": "message_id",
+   "fieldtype": "Data",
+   "label": "Message ID"
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-03-28 06:35:52.316435",
+ "modified": "2024-04-04 14:40:14.464425",
  "modified_by": "Administrator",
  "module": "Erpnext Meta",
  "name": "Meta Messages",

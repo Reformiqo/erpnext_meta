@@ -1,7 +1,7 @@
 {
  "actions": [],
  "allow_rename": 1,
- "autoname": "format:COMMENT-{####}",
+ "autoname": "format:{comment_id}",
  "creation": "2024-03-18 15:22:22.270778",
  "default_view": "List",
  "doctype": "DocType",
@@ -47,7 +47,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2024-03-30 04:38:54.115648",
+ "modified": "2024-04-03 14:57:24.336046",
  "modified_by": "Administrator",
  "module": "Erpnext Meta",
  "name": "Meta Comments",
